@@ -6,18 +6,66 @@ class Task:
     times_destroyed_completed_tasks = 0
     times_destroyed_incomplete_tasks = 0
     times_completed_everything = 0
+    object_created = 0
     def __init__( self ):
-        pass
+        """ Constructor """
+        self.object_created += 1
+
+    """ Getters, Setters """
+    def get_tasks(self):
+        """
+            @method get_tasks
+            @desc returns task list.
+            @usage Task.get_tasks()
+        """
+        return list( self.tasks )
+    
+    def set_task( self, new_task_id, new_task_name, new_task_status:bool ):
+        """
+            @method set_task
+            @param new_task_id:int, task id is an integer.
+            @param new_task_name:str, the actual task is a string.
+            @param new_task_statas:bool, true/false value. is task complete?
+            @desc appends task to task list.
+            @usage Task.set_task( params... )
+        """
+        if ( new_task_status != bool() ):
+            print( "Unable to set new task. Task status must be a boolean value." )
+            return
+        else:
+            self.tasks.append( { "id": new_task_id, 
+                                 "task_name": new_task_name, 
+                                 "task_status": new_task_status } )
+
+    def set_tasks( self, new_task_list:list ):
+        self.tasks = new_task_list
+    def display_stats( self ):
+        """
+            @method display_stats
+            @param self
+            @desc Displays stats relative to task activity.
+            @usage Task.display_stats()
+        """
+        print( "\n Task Stats." )
+        print( f"Tasks created: { self.number_of_tasks_created }" )
+        print( f"Tasks removed: { self.number_of_tasks_removed }" )
+        print( f"Tasks completed: { self.number_of_tasks_completed }" )
+        print( f"Self destructed completed tasks: { self.times_destroyed_completed_tasks }")
+        print( f"Self destructed incomplete tasks: { self.times_destroyed_incomplete_tasks }")
+        print( f"Marked all tasks complete: { self.times_completed_everything }\n" )
+    
     def create_new_task( self, task_counter=int):
         creating_new_task = True
         task_name = str( input( "Enter task: ") )
         self.set_task( task_counter, task_name, False )
         self.number_of_tasks_created += 1
+    
     def display_number_of_tasks( self ):
         if ( self.number_of_tasks_created == 1 ):
             print( f"\nDisplaying { self.number_of_tasks_created } task." )
         else:
             print( f"\nDisplaying { self.number_of_tasks_created } tasks." )
+    
     def display_all_tasks( self ):
         if ( len( self.get_tasks()) < 1 ):
             print( "The to-do list is empty." )
@@ -28,12 +76,14 @@ class Task:
                 print( f"({ task[ 'id' ] })\t[ x ]\t{ task[ 'task_name'] }" )
             else:
                 print( f"({ task[ 'id' ] })\t[ ✓ ]\t{ task[ 'task_name' ] }" )
+    
     def display_completed_tasks( self ):
         print( "\nDisplaying completed tasks only." )
         for task in self.get_tasks():
             task_completed = (task["task_status"] == True)
             if ( task_completed):
                 print( f"({ task[ 'id' ] })\t[ ✓ ]\t{ task[ 'task_name' ] }" )
+    
     def remove_completed_tasks( self ):
         print("\n Removing completed task from memory. I guess we only forget the things we complete.")
         tasks = self.get_tasks()
@@ -43,6 +93,7 @@ class Task:
                 tasks.remove( task_completed )
             self.times_destroyed_completed_tasks += 1
         self.set_tasks( tasks )
+    
     def remove_incomplete_tasks( self ):
         print("\nYeah, let's just forget about the things we never accomplished.")
         tasks = self.get_tasks()
@@ -52,12 +103,14 @@ class Task:
                 tasks.remove( incomplete_task )
         self.times_destroyed_incomplete_tasks += 1
         self.set_tasks( tasks )
+   
     def display_incomplete_tasks( self ):
         print( "\nDisplaying incomplete tasks. Hopefully, there aren't too many." )
         for task in self.get_tasks():
             task_incomplete = (task["task_status"] == False)
             if ( task_incomplete ):
                 print( f"({ task[ 'id' ] })\t[ x ]\t{ task[ 'task_name'] }" )
+    
     def mark_all_tasks_complete( self ):
         try:
             print( "Oh you are a power player, huh?" )
@@ -67,6 +120,7 @@ class Task:
             self.times_completed_everything += 1
         except Exception:
             print( "A strange thing has happened. Maybe there are no tasks to mark." )
+    
     def mark_all_tasks_incomplete( self ):
         try:
             print( "Wow. Life just became infinetely more difficult." )
@@ -75,6 +129,7 @@ class Task:
                 task["task_status"] = False
         except Exception:
             print( "A strange thing has happened. Maybe there are no tasks to mark." )
+    
     def mark_task_complete( self, task_to_mark_as_complete_id:int ):
         try:
             tasks = self.get_tasks()
@@ -86,6 +141,7 @@ class Task:
             self.set_tasks( tasks )
         except IndexError:
             print("There is no task with this id number.")
+    
     def mark_task_incomplete( self, task_to_mark_as_incomplete_id:int ):
         try:
             tasks = self.get_tasks()
@@ -96,7 +152,8 @@ class Task:
             self.set_tasks( tasks )
         except IndexError:
             print("There is no task with this id number.")
-    def remove_task( self, task_removal_id:int):
+    
+    def remove_task( self, task_removal_id:int ):
         try:
             tasks = self.get_tasks()
             print("Removing task with id number ", task_removal_id )
@@ -107,15 +164,5 @@ class Task:
             self.set_tasks( tasks )
         except IndexError:
             print("There is no task with that id number.")
-    def get_tasks(self):
-        return list( self.tasks )
-    def set_tasks( self, new_task_list:list ):
-        self.tasks = new_task_list
-    def set_task( self, new_task_id, new_task_name, new_task_status:bool ):
-        if ( new_task_status != bool() ):
-            print( "Unable to set new task. Task status must be a boolean value." )
-            return
-        else:
-            self.tasks.append( { "id": new_task_id, 
-                                 "task_name": new_task_name, 
-                                 "task_status": new_task_status } )
+    
+    
